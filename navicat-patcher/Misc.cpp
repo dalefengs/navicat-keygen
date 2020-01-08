@@ -3,10 +3,12 @@
 #include <stdio.h>
 #include <signal.h>
 #include <setjmp.h>
-#include <filesystem>
+#include <experimental/filesystem>
 #include "ExceptionSystem.hpp"
 
 static jmp_buf g_jmbuf;
+
+namespace fs = std::experimental::filesystem;
 
 static void SIGSEGV_handler(int sig) {
     siglongjmp(g_jmbuf, 1);
@@ -17,10 +19,10 @@ static void SIGSEGV_handler(int sig) {
 //  succeed if return true, otherwise return false
 //
 template<typename __Type>
-static inline bool probe_for_read(const void* p, void* out) {
+static inline bool probe_for_read(const void *p, void *out) {
     int r = sigsetjmp(g_jmbuf, 1);
     if (r == 0) {
-        *reinterpret_cast<__Type*>(out) = *reinterpret_cast<const __Type*>(p);
+        *reinterpret_cast<__Type *>(out) = *reinterpret_cast<const __Type *>(p);
         return true;
     } else {
         return false;
@@ -35,10 +37,10 @@ namespace nkg::Misc {
     //  NOTICE:
     //      `base` must >= `from`
     //
-    void PrintMemory(const void* lpMemBegin, const void* lpMemEnd, const void* lpBase) noexcept {
-        auto pbBegin = reinterpret_cast<const uint8_t*>(lpMemBegin);
-        auto pbEnd = reinterpret_cast<const uint8_t*>(lpMemEnd);
-        auto pbBase = reinterpret_cast<const uint8_t*>(lpBase);
+    void PrintMemory(const void *lpMemBegin, const void *lpMemEnd, const void *lpBase) noexcept {
+        auto pbBegin = reinterpret_cast<const uint8_t *>(lpMemBegin);
+        auto pbEnd = reinterpret_cast<const uint8_t *>(lpMemEnd);
+        auto pbBase = reinterpret_cast<const uint8_t *>(lpBase);
 
         if (pbBegin >= pbEnd)
             return;
@@ -55,12 +57,12 @@ namespace nkg::Misc {
             if (pbBase) {
                 uintptr_t d = pbBegin >= lpBase ? pbBegin - pbBase : pbBase - pbBegin;
                 if (pbBegin >= lpBase) {
-                    printf("+0x%.*zx  ", static_cast<int>(2 * sizeof(void*)), d);
+                    printf("+0x%.*zx  ", static_cast<int>(2 * sizeof(void *)), d);
                 } else {
-                    printf("-0x%.*zx  ", static_cast<int>(2 * sizeof(void*)), d);
+                    printf("-0x%.*zx  ", static_cast<int>(2 * sizeof(void *)), d);
                 }
             } else {
-                printf("0x%.*zx  ", static_cast<int>(2 * sizeof(void*)), reinterpret_cast<uintptr_t>(pbBegin));
+                printf("0x%.*zx  ", static_cast<int>(2 * sizeof(void *)), reinterpret_cast<uintptr_t>(pbBegin));
             }
 
             for (int i = 0; i < 16; ++i) {
@@ -99,18 +101,18 @@ namespace nkg::Misc {
     //  NOTICE:
     //      `base` must >= `from`
     //
-    void PrintMemory(const void* lpMem, size_t cbMem, const void* lpBase) noexcept {
-        PrintMemory(lpMem, reinterpret_cast<const uint8_t*>(lpMem) + cbMem, lpBase);
+    void PrintMemory(const void *lpMem, size_t cbMem, const void *lpBase) noexcept {
+        PrintMemory(lpMem, reinterpret_cast<const uint8_t *>(lpMem) + cbMem, lpBase);
     }
 
     [[nodiscard]]
     bool FsIsExist(std::string_view szPath) {
         std::error_code ec;
-        if (std::filesystem::exists(szPath, ec)) {
+        if (fs::exists(szPath, ec)) {
             return true;
         } else {
             if (ec) {
-                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::exists failed.");
+                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::exists failed.");
             } else {
                 return false;
             }
@@ -120,25 +122,25 @@ namespace nkg::Misc {
     [[nodiscard]]
     bool FsIsFile(std::string_view szPath) {
         std::error_code ec;
-        if (std::filesystem::is_regular_file(szPath, ec)) {
+        if (fs::is_regular_file(szPath, ec)) {
             return true;
         } else {
             if (ec) {
-                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::is_regular_file failed.");
+                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::is_regular_file failed.");
             } else {
                 return false;
             }
         }
     }
-    
+
     [[nodiscard]]
     bool FsIsDirectory(std::string_view szPath) {
         std::error_code ec;
-        if (std::filesystem::is_directory(szPath, ec)) {
+        if (fs::is_directory(szPath, ec)) {
             return true;
         } else {
             if (ec) {
-                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::is_directory failed.");
+                throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::is_directory failed.");
             } else {
                 return false;
             }
@@ -147,23 +149,23 @@ namespace nkg::Misc {
 
     void FsCopyFile(std::string_view szSourcePath, std::string_view szDestinationPath) {
         std::error_code ec;
-        if (std::filesystem::copy_file(szSourcePath, szDestinationPath, ec) == false) {
-            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::copy_file failed.");
+        if (!fs::copy_file(szSourcePath, szDestinationPath, ec)) {
+            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::copy_file failed.");
         }
     }
 
     void FsDeleteFile(std::string_view szPath) {
         std::error_code ec;
-        if (std::filesystem::remove(szPath, ec) == false) {
-            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::remove failed.");
+        if (!fs::remove(szPath, ec)) {
+            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::remove failed.");
         }
     }
 
     std::string FsCurrentWorkingDirectory() {
         std::error_code ec;
-        std::string path = std::filesystem::current_path(ec);
+        std::string path = fs::current_path(ec);
         if (ec) {
-            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "std::filesystem::current_path failed.");
+            throw ARL::SystemError(__BASE_FILE__, __LINE__, ec.value(), "fs::current_path failed.");
         } else {
             return path;
         }
