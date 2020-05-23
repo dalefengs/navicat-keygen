@@ -4,7 +4,7 @@
 
 1. 请确保你有 __Visual Studio 2019__ 或者更高版本。因为这是一个VS2019项目。
 
-2. 请确保你安装了 `vcpkg` 以及下面几个库：
+2. 请确保你安装了 `vcpkg` 以及下面几个库：(安装的时候要注意openssl的版本,我使用1.0.2s-2版本成功编译并且测试通过了,vcpkg请reset到7a33372afdb6e9fe960551780b7ccb81c52a1d65提交然后安装,安装的时候很多依赖的软件下载很慢可以用户迅雷什么的先下载好)
 
    * `capstone[x86]:x64-windows-static`
    * `capstone[x86]:x86-windows-static`
