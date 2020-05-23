@@ -28,7 +28,7 @@
    # install rapidjson
    $ sudo apt-get install rapidjson-dev
 
-   # insstall openssl
+   # install openssl
    $ sudo apt-get install openssl
    ```
 
