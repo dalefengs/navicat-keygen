@@ -7,6 +7,7 @@
    * `capstone`
    * `keystone`
    * `rapidjson`
+   * `openssl`
 
    你可以通过下面的命令来安装它们：
 
@@ -26,6 +27,9 @@
 
    # install rapidjson
    $ sudo apt-get install rapidjson-dev
+
+   # insstall openssl
+   $ sudo apt-get install openssl
    ```
 
 2. 你的gcc支持C++17特性。 
