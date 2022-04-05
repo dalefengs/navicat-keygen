@@ -1,8 +1,5 @@
-# 下载地址
-
-`http://www.navicat.com.cn/download/navicat-premium`
-
-# 提取AppImage文件到文件夹里
+**请支持正版！ 该项目不是本人开发，备份已被删除的 navicat-keygen， 仅用于个人学习！不要用于非法用途！**
+# 提取 AppImage 文件
 
 **cp的时候可能比较久请耐心等待  尽量目录一致**
 
@@ -322,7 +319,7 @@ NAVM-RTVJ-EO42-IODD
 **断开网络**. 找到注册窗口，填写keygen给你的 **序列号**，然后点击 `激活`
 
 通常在线激活会失败，所以在弹出的提示中选择 `手动激活`。
-![image](https://img2020.cnblogs.com/blog/2354934/202104/2354934-20210412220953449-292109350.png)
+
 
 复制 **请求码** 到keygen，连按两次回车结束。
 
@@ -339,10 +336,7 @@ aokwdgERal7ycavHbohKxyiHS4m+oI3yCV+N6/q10QUJgA57YwtawE1HKbTO+6WqfOv8piR7o3cNNuK0
 
 最终你会得到一个base64编码的 激活码。
 
-将之复制到 手动激活 的窗口，然后点击 激活。
 
-如果没有什么意外，应该可以成功激活。
-![image](https://img2020.cnblogs.com/blog/2354934/202104/2354934-20210412221007365-615652406.png)
 # 清理
 
 ```
